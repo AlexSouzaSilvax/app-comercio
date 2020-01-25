@@ -1,30 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Image,
-  KeyboardAvoidingView,
   Dimensions,
-  TextInput,
-  Alert,
   SafeAreaView
-  //  LinearGradient
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { api, helper } from "../service/api";
-//import logo from "../../assets/logo.png";
-
 import { Spinner } from "native-base";
-
 import LinearGradient from "../components/LinearGradient";
-
 import logo from "../../assets/icon.png";
+import { helper } from "../service/api";
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState("alexsouzasilvax@gmail.com");
+  useEffect(() => {
+    verificaUsuarioLogado();
+  }, []);
 
-  const [btnLoading, setBtnLoading] = useState(false);
+  async function verificaUsuarioLogado() {
+    let _idUsuario = await helper.getItem("_idUsuario");
+    if (_idUsuario) {
+      console.log("Usuário logado.");
+      //navigation.navigate('App');
+    } else {
+      console.log("Não existe ninguem aqui");
+      navigation.navigate("Login");
+    }
+  }
 
   return (
     <SafeAreaView behavior="padding" style={styles.container}>
@@ -33,54 +35,18 @@ export default function Login({ navigation }) {
         style={styles.linearGradient}
       >
         <Image source={logo} style={styles.logo} />
-        <KeyboardAvoidingView behavior="padding" enabled>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email:</Text>
-            <TextInput
-              style={styles.input}
-              value={email}
-              onChangeText={e => setEmail(e)}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoFocus={true}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Senha:</Text>
-            <TextInput
-              style={styles.input}
-              value={email}
-              onChangeText={e => setEmail(e)}
-            />
-          </View>
-        </KeyboardAvoidingView>
-        <View style={{ alignSelf: "center" }}>
-          <TouchableOpacity style={styles.button}>
-            {btnLoading ? (
-              <Spinner color="#F3F3F3" />
-            ) : (
-              <Text style={styles.buttonText}>Acessar</Text>
-            )}
-          </TouchableOpacity>
-        </View>
-        <View
+        <Text
           style={{
-            justifyContent: "center",
-            marginTop: 130
+            fontSize: 48,
+            alignSelf: "center",
+            color: "#ddd",
+            fontWeight: "bold"
+            //fontFamily: "Scriptina"
           }}
         >
-          <Text
-            style={[styles.textNomeEmpresa, { color: "#ddd", fontSize: 20 }]}
-          >
-            from
-          </Text>
-          <Text
-            style={[styles.textNomeEmpresa, { color: "#F3F3F3", fontSize: 25 }]}
-          >
-            @alexsouzasilvax
-          </Text>
-        </View>
+          Barber's
+        </Text>
+        <Spinner color="#aaa" size={60} style={{ marginTop: 25 }} />
       </LinearGradient>
     </SafeAreaView>
   );
